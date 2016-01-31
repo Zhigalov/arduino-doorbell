@@ -4,10 +4,10 @@
  * @version v2.0
  * @author Илья Телегин <ilya.a.telegin@gmail.com>, Сергей Жигалов <sergey.zhigalov@gmail.com>
  */
-const int BELL_PIN = 2;              // Пин размыкания номеронабирателя (при наборе цифры три произойдет три размыкания) [синий]
-const int SIG_PIN = 3;               // Пин состояния номеронабирателя (1 - идет набор, 0 - нихера не происходит) [зеленый]
-const int RED = 4;                   // Красный светодиод [красный]
-const int GREEN = 5;                 // Красный светодиод [зеленый]
+const int BELL_PIN = 3;              // Пин размыкания номеронабирателя (при наборе цифры три произойдет три размыкания) [синий]
+const int SIG_PIN = 4;               // Пин состояния номеронабирателя (1 - идет набор, 0 - нихера не происходит) [белый]
+const int RED = 5;                   // Красный светодиод [красный]
+const int GREEN = 6;                 // Красный светодиод [зеленый]
 const int CLK = 8;                   // CLK для Wave shield 
 const int DAT = 9;                   // DAT для Wave shield
 
@@ -43,12 +43,15 @@ void setup() {
   pinMode(SIG_PIN, INPUT);
 
   Serial.begin(9600);
+
+  play(0xfff0);                      // Убавляем громкость
 }
 
 void loop() {
   curSig = digitalRead(SIG_PIN);
   
   if (curSig == HIGH) {
+
     lightOff();
     mode = BELL;
     readDigit();
@@ -84,6 +87,7 @@ void processDigit(int digit) {
       Serial.println(":-)");
       digitalWrite(GREEN, HIGH);
       play(code);
+      play(0xfff7);
     } else {
       Serial.println(":-(");
       digitalWrite(RED, HIGH);
@@ -135,6 +139,7 @@ void blink() {
         lightOff();
         counter = -1;
         mode = WAIT;
+        play(0xfff0);
       }
       break;
   }
