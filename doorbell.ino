@@ -29,8 +29,16 @@ int multiplier = DEFAULT_MULTIPLIER; // Множитель последней н
 int counter = 0;
 int mode = WAIT;
 
-int bellsCount = 6;                  // Количество доступных мелодий
-int bells[] = {0, 1, 2, 3, 4, 5};    // Номера доступных мелодий
+int bellsCount = 7;                  // Количество доступных мелодий
+int bells[] = {                      // Номера доступных мелодий
+  407,                               // Третьякова Настя
+  1606,                              // Лепихин Антон
+  3010,                              // Полоцкий Илья
+  2304,                              // Телегин Илья
+  1003,                              // Калистратов Сергей
+  2006,                              // Жигалов Сергей
+  711                                // Лаптева Наталья
+};
 
 void setup() {
   pinMode(CLK, OUTPUT);
@@ -83,15 +91,9 @@ void processDigit(int digit) {
   if (multiplier == 0) {
     Serial.println(code);
     
-    if (isBellExists(code)) {
-      Serial.println(":-)");
-      digitalWrite(GREEN, HIGH);
-      play(code);
-      play(0xfff7);
-    } else {
-      Serial.println(":-(");
-      digitalWrite(RED, HIGH);
-    } 
+    digitalWrite(GREEN, HIGH);
+    play(getAudioCode(code));
+    play(0xfff7);
 
     code = 0;
     multiplier = DEFAULT_MULTIPLIER;
@@ -100,14 +102,14 @@ void processDigit(int digit) {
   }
 }
 
-boolean isBellExists(int code) {
+int getAudioCode(int code) {
   for (int i = 0; i < bellsCount; i++) {
     if (bells[i] == code) {
-      return true;
+      return code;
     }
   }
 
-  return false;
+  return 0;
 }
 
 void lightOff() {
